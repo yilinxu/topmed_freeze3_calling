@@ -26,17 +26,8 @@ RUN git clone https://github.com/statgen/topmed_freeze3_calling.git
 
 WORKDIR topmed_freeze3_calling
 
+# Remove the .git folder which is quite large to reduce the size of the image
+RUN rm -rf .git
+
 RUN make SHELL=/bin/bash
-
-
-#install reference files at runtime to avoid a large image size
-#RUN wget ftp://share.sph.umich.edu/gotcloud/ref/hs38DH-db142-v1.tgz
-
-#RUN tar xzvf hs38DH-db142-v1.tgz
-
-#RUN rm hs38DH-db142-v1.tgz
-
-
-
-
 

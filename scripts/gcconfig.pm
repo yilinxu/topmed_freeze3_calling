@@ -11,19 +11,23 @@ our @EXPORT = qw($ref $md5 $bgzip $samtools $bcftools $bamUtil $tabix $index $pe
 
 ############################################################
 ### MODIFY THESE VARIABLES TO YOUR COMPUTING ENVIRONMENT
-our $index = "data/trio_data.index";
-our $pedf = "data/trio_data.ped";
+#our $index = "data/trio_data.index";
+#our $pedf = "data/trio_data.ped";
+
+our $index = "data/TopMed_open_access_files.index";
+our $pedf = "data/TopMed_open_access_files.ped";
+
 our $out = "out";
 our $discoverUnit = 20000000;
 our $genotypeUnit = 1000000;
 ############################################################
 ### MODIFY THESE VARIABLES TO IF REFERENCE IS LOCATED ELSEWHERE
-our $refDir = "$FindBin::Bin/../gotcloud.ref";
+our $refDir = "$FindBin::Bin/../data/local/ref/gotcloud.ref/hg38";
 our $md5 = "$refDir/md5/%2s/%2s/%s";
-our $ref = "$refDir/hs37d5.fa";
-our $dbsnp = "$refDir/dbsnp_142.b37.vcf.gz";
-our $hapmapvcf = "$refDir/hapmap_3.3.b37.sites.vcf.gz";
-our $omnivcf = "$refDir/1000G_omni2.5.b37.sites.PASS.vcf.gz";
+our $ref = "$refDir/hs38DH.fa";
+our $dbsnp = "$refDir/dbsnp_142.b38.vcf.gz";
+our $hapmapvcf = "$refDir/hapmap_3.3.b38.sites.vcf.gz";
+our $omnivcf = "$refDir/1000G_omni2.5.b38.sites.PASS.vcf.gz";
 ############################################################
 ### MODIFY THESE VARIABLES TO IF EXTERNAL BINARIES ARE USED
 our $bgzip = "$FindBin::Bin/../htslib/bgzip";
