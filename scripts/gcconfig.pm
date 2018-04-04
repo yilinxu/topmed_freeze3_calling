@@ -22,7 +22,7 @@ our $discoverUnit = 20000000;
 our $genotypeUnit = 1000000;
 ############################################################
 ### MODIFY THESE VARIABLES TO IF REFERENCE IS LOCATED ELSEWHERE
-our $refDir = "$FindBin::Bin/../data/local/ref/gotcloud.ref/hg38";
+our $refDir = "$FindBin::Bin/../data/local.org/ref/gotcloud.ref/hg38";
 our $md5 = "$refDir/md5/%2s/%2s/%s";
 our $ref = "$refDir/hs38DH.fa";
 our $dbsnp = "$refDir/dbsnp_142.b38.vcf.gz";
