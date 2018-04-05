@@ -22,9 +22,12 @@ WORKDIR root
 #RUN wget -O top_med_freeze3_calling.zip https://github.com/statgen/topmed_freeze3_calling/archive/b48632197d558ad23eae56eb2a695755918c425f.zip
 #RUN unzip top_med_freeze3_calling.zip
 
-RUN git clone https://github.com/statgen/topmed_freeze3_calling.git
+#RUN git clone https://github.com/statgen/topmed_freeze3_calling.git
+RUN git clone https://github.com/BD2KGenomics/topmed_freeze3_calling.git
 
 WORKDIR topmed_freeze3_calling
+
+RUN git checkout feature/dockerize-workflow
 
 # Remove the .git folder which is quite large to reduce the size of the image
 RUN rm -rf .git

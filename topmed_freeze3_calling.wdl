@@ -99,9 +99,9 @@ workflow TopMedVariantCaller {
           tsv_crams_rows.append([base_name_wo_extension, cram_file, '0.000'])
       
       # Remove the old PED file; we will not use a PED file?
-      open('data/trio_data.ped', 'w').close()
+      open('data/TopMed_open_access_files.ped', 'w').close()
       
-      with open('data/trio_data.index', 'w') as tsv_index_file:
+      with open('data/TopMed_open_access_files.index', 'w') as tsv_index_file:
           writer = csv.writer(tsv_index_file, delimiter = '\t')
           for cram_info in tsv_crams_rows:
               writer.writerow(cram_info)
@@ -126,7 +126,7 @@ workflow TopMedVariantCaller {
       echo "Running step1 - detect and merge variants - removing old output dir if it exists"
       if [ -d "$WORKING_DIR" ]; then rm -Rf "$WORKING_DIR"; fi
       echo "Running step1 - detect and merge variants - generating Makefile"
-      perl scripts/step1-detect-and-merge-variants.pl $(seq 1 22 | xargs -n 1 -I% echo chr%)
+      perl scripts/step1-detect-and-merge-variants.pl $(seq 1 22 | xargs -n 1 -I% echo chr%) chrX
       echo "Running step1 - detect and merge variants - running Makefile"
       make SHELL='/bin/bash' -f 'out/aux/Makefile' -j 22
 
@@ -150,7 +150,7 @@ workflow TopMedVariantCaller {
       echo "Running step2 - joing genotyping - removing old output dir if it exists"
       if [ -d "$WORKING_DIR"/paste ]; then rm -Rf "$WORKING_DIR"/paste; fi
       echo "Running step2 - joing genotyping - generating Makefile"
-      perl scripts/step2-joint-genotyping.pl $(seq 1 22 | xargs -n 1 -I% echo chr%)
+      perl scripts/step2-joint-genotyping.pl $(seq 1 22 | xargs -n 1 -I% echo chr%) chrX
       echo "Running step2 - joing genotyping - running Makefile"
       MAKEFILE_NAME="chrchr"$(seq -s '_chr' 1 22)".Makefile"
       make SHELL='/bin/bash' -f "$WORKING_DIR"/paste/"$MAKEFILE_NAME" -j 22
