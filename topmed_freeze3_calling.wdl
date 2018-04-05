@@ -99,9 +99,9 @@ workflow TopMedVariantCaller {
           tsv_crams_rows.append([base_name_wo_extension, cram_file, '0.000'])
       
       # Remove the old PED file; we will not use a PED file?
-      open('data/TopMed_open_access_files.ped', 'w').close()
+      open('/root/topmed_freeze3_calling/data/TopMed_open_access_files.ped', 'w+').close()
       
-      with open('data/TopMed_open_access_files.index', 'w') as tsv_index_file:
+      with open('/root/topmed_freeze3_calling/data/TopMed_open_access_files.index', 'w+') as tsv_index_file:
           writer = csv.writer(tsv_index_file, delimiter = '\t')
           for cram_info in tsv_crams_rows:
               writer.writerow(cram_info)
