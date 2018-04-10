@@ -6,7 +6,8 @@ workflow TopMedVariantCaller {
 
   call sumCRAMSizes {
     input:
-      input_crams = input_cram_files
+      input_crams = input_cram_files,
+      downloadReferenceFilesOK = downloadReferenceFiles.outputFile
 
   }
 
@@ -19,19 +20,24 @@ workflow TopMedVariantCaller {
 
   call variantDiscoveryAndConsolidation {
      input:
-      disk_size = sumCRAMSizes.total_size
-     
+      disk_size = sumCRAMSizes.total_size,
+      indexFileConstructedOK = constructIndexFile.constructIndexFileOK,
+      indexFile = constructIndexFile.outputIndexFile,
+      PEDFile = constructIndexFile.outputPEDFile
   }
 
   call jointGenotyping {
     input:
-      disk_size = sumCRAMSizes.total_size
-
+      disk_size = sumCRAMSizes.total_size,
+      variantDiscoveryAndConsolidationOutput = variantDiscoveryAndConsolidation.variantDiscoveryAndConsolidationOutput
   }
 }
 
   task downloadReferenceFiles {
     command {
+      set -o pipefail
+      set -e
+
       if [[ ! -d "data/local.org/ref/gotcloud.ref/hg38" ]] || [[ -z "$(ls -A data/local.org/ref/gotcloud.ref/hg38)" ]]
       then
         echo "Reference files not found; downloading them now"
@@ -41,6 +47,11 @@ workflow TopMedVariantCaller {
       else
         echo "Reference files found"
       fi
+
+      echo "Reference files installed OK" > "downloadReferenceFilesOK.txt"
+    }
+    output {
+      File outputFile = "downloadReferenceFilesOK.txt"
     }
     runtime {
       memory: "10 GB"
@@ -54,6 +65,7 @@ workflow TopMedVariantCaller {
 
   task sumCRAMSizes {
     Array[File] input_crams
+    File downloadReferenceFilesOK
 
     command {
       python <<CODE
@@ -86,6 +98,7 @@ workflow TopMedVariantCaller {
     command {
       python <<CODE
 
+      from __future__ import print_function
       import csv
       import os
       
@@ -97,15 +110,26 @@ workflow TopMedVariantCaller {
           base_name = os.path.basename(cram_file)
           base_name_wo_extension = base_name.split('.')[0]
           tsv_crams_rows.append([base_name_wo_extension, cram_file, '0.000'])
-      
+
       # Remove the old PED file; we will not use a PED file?
-      open('/root/topmed_freeze3_calling/data/TopMed_open_access_files.ped', 'w+').close()
-      
-      with open('/root/topmed_freeze3_calling/data/TopMed_open_access_files.index', 'w+') as tsv_index_file:
+      open('TopMed_open_access_files.ped', 'w+').close()
+      #open('/root/topmed_freeze3_calling/data/TopMed_open_access_files.ped', 'w+').close()
+
+      with open('TopMed_open_access_files.index', 'w+') as tsv_index_file:
+      #with open('/root/topmed_freeze3_calling/data/TopMed_open_access_files.index', 'w+') as tsv_index_file:
           writer = csv.writer(tsv_index_file, delimiter = '\t')
           for cram_info in tsv_crams_rows:
               writer.writerow(cram_info)
+
+      with open('constructIndexFileOutputOK.txt', 'w+') as index_file_OK:
+          print("Index and PED file constructed", index_file_OK)
+
       CODE
+    }
+    output {
+      File constructIndexFileOK = "constructIndexFileOutputOK.txt"
+      File outputIndexFile = "TopMed_open_access_files.index"
+      File outputPEDFile = "TopMed_open_access_files.ped"
     }
     runtime {
       memory: "10 GB"
@@ -117,10 +141,18 @@ workflow TopMedVariantCaller {
   }
 
   task variantDiscoveryAndConsolidation {
-    String disk_size
+     String disk_size
+     File indexFile
+     File PEDFile
+     File indexFileConstructedOK
 
     command {
+      set -o pipefail
+      set -e
+
       cd /root/topmed_freeze3_calling
+      cp ${indexFile} /root/topmed_freeze3_calling/data/TopMed_open_access_files.index
+      cp ${PEDFile} /root/topmed_freeze3_calling/data/TopMed_open_access_files.ped
       WORKING_DIR='out'
       echo "Running step1 - detect and merge variants"
       echo "Running step1 - detect and merge variants - removing old output dir if it exists"
@@ -129,9 +161,12 @@ workflow TopMedVariantCaller {
       perl scripts/step1-detect-and-merge-variants.pl $(seq 1 22 | xargs -n 1 -I% echo chr%) chrX
       echo "Running step1 - detect and merge variants - running Makefile"
       make SHELL='/bin/bash' -f 'out/aux/Makefile' -j 22
-
+      echo "Variant discovery and consolidation OK" > "variantDiscoveryAndConsolidationOK.txt"
     }
-    runtime {
+     output {
+      File variantDiscoveryAndConsolidationOutput = "variantDiscoveryAndConsolidationOK.txt"
+    }
+   runtime {
       memory: "10 GB"
       cpu: "16"
       disks: "local-disk " + sub(disk_size, "\\..*", "") + " HDD"
@@ -142,8 +177,12 @@ workflow TopMedVariantCaller {
 
   task jointGenotyping {
     String disk_size
+    File variantDiscoveryAndConsolidationOutput
 
     command {
+      set -o pipefail
+      set -e
+
       cd /root/topmed_freeze3_calling
       WORKING_DIR='out'
       echo "Running step2 - joing genotyping"
@@ -164,3 +203,4 @@ workflow TopMedVariantCaller {
       docker: "quay.io/wshands/topmed_freeze3_calling:latest"
     }
   }
+
