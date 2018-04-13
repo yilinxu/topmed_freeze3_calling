@@ -1,6 +1,6 @@
 {
-  "TopMedVariantCaller.input_cram_files": ["/home/ubuntu/TopMed/topmed_open_access/NWD176325.recab.cram"],
-  "TopMedVariantCaller.input_crai_files": ["/home/ubuntu/TopMed/topmed_open_access/NWD176325.recab.cram.crai"],
+  "TopMedVariantCaller.input_cram_files": ["/home/ubuntu/TopMed/topmed_open_access/NWD176325.recab.cram", "/home/ubuntu/TopMed/topmed_open_access/NWD759405.recab.cram"],
+  "TopMedVariantCaller.input_crai_files": ["/home/ubuntu/TopMed/topmed_open_access/NWD176325.recab.cram.crai", "/home/ubuntu/TopMed/topmed_open_access/NWD759405.recab.cram.crai"],
 
   "TopMedVariantCaller.topmed_variant_caller_output_file": "/home/ubuntu/topmed_freeze3_calling/topmed_variant_caller_output_file.tar.gz",
   "TopMedVariantCaller.topmed_variant_caller_output_path": ".",
