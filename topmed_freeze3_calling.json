@@ -1,10 +1,9 @@
 {
-  "TopMedVariantCaller.input_cram_files": ["/home/ubuntu/TopMed/topmed_open_access/NWD176325.recab.cram", "/home/ubuntu/TopMed/topmed_open_access/NWD759405.recab.cram"],
-  "TopMedVariantCaller.input_crai_files": ["/home/ubuntu/TopMed/topmed_open_access/NWD176325.recab.cram.crai", "/home/ubuntu/TopMed/topmed_open_access/NWD759405.recab.cram.crai"],
+  "TopMedVariantCaller.input_cram_files": ["/home/ubuntu/TopMed/topmed_open_access/NWD176325.recab.cram"],
+  "TopMedVariantCaller.input_crai_files": ["/home/ubuntu/TopMed/topmed_open_access/NWD176325.recab.cram.crai"],
 
   "TopMedVariantCaller.topmed_variant_caller_output_file": "/home/ubuntu/topmed_freeze3_calling/topmed_variant_caller_output_file.tar.gz",
-
-  "TopMedVariantCaller.copyReferenceFilesCommandsFile": "/home/ubuntu/topmed_freeze3_calling/copy_reference_files_commands.sh",
+  "TopMedVariantCaller.topmed_variant_caller_output_path": ".",
 
   "TopMedVariantCaller.ref_1000G_omni2_5_b38_sites_PASS_vcf_gz":  "/home/ubuntu/topmed_freeze3_calling/data/local.org/ref/gotcloud.ref/hg38/1000G_omni2.5.b38.sites.PASS.vcf.gz",
   "TopMedVariantCaller.ref_1000G_omni2_5_b38_sites_PASS_vcf_gz_tbi":  "/home/ubuntu/topmed_freeze3_calling/data/local.org/ref/gotcloud.ref/hg38/1000G_omni2.5.b38.sites.PASS.vcf.gz.tbi",

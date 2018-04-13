@@ -4,6 +4,7 @@ workflow TopMedVariantCaller {
   Array[File] input_cram_files
 
   File topmed_variant_caller_output_file
+  File topmed_variant_caller_output_path
 
   File ref_1000G_omni2_5_b38_sites_PASS_vcf_gz
   File ref_1000G_omni2_5_b38_sites_PASS_vcf_gz_tbi
@@ -80,6 +81,7 @@ workflow TopMedVariantCaller {
       input_crams = input_cram_files,
       disk_size = sumCRAMSizes.total_size,
       topmed_variant_caller_output_file = topmed_variant_caller_output_file,
+      topmed_variant_caller_output_path = topmed_variant_caller_output_path,
 
       ref_1000G_omni2_5_b38_sites_PASS_vcf_gz = ref_1000G_omni2_5_b38_sites_PASS_vcf_gz,
       ref_1000G_omni2_5_b38_sites_PASS_vcf_gz_tbi = ref_1000G_omni2_5_b38_sites_PASS_vcf_gz_tbi,
@@ -142,6 +144,9 @@ workflow TopMedVariantCaller {
       ref_hs38DH_winsize100_gc = ref_hs38DH_winsize100_gc
 
   }
+  output {
+      File topmed_variant_caller_output = topmed_variant_caller_output_file
+  }
 }
 
 
@@ -188,6 +193,7 @@ workflow TopMedVariantCaller {
 
      String disk_size
      File topmed_variant_caller_output_file
+     File topmed_variant_caller_output_path
 
      File ref_1000G_omni2_5_b38_sites_PASS_vcf_gz
      File ref_1000G_omni2_5_b38_sites_PASS_vcf_gz_tbi
@@ -363,14 +369,8 @@ workflow TopMedVariantCaller {
       echo "Running step1 - detect and merge variants - generating Makefile"
       perl scripts/step1-detect-and-merge-variants.pl $(seq 1 22 | xargs -n 1 -I% echo chr%) chrX
       echo "Running step1 - detect and merge variants - running Makefile"
-      make SHELL='/bin/bash' -f 'out/aux/Makefile' -j 22
+      make SHELL='/bin/bash' -f 'out/aux/Makefile' -j 23
       
-      if [ -e /root/topmed_freeze3_calling/out/log/end.discovery.OK ]
-      then
-          echo "SUCCESS"
-      else
-          echo "FAILURE"
-      fi
 
       echo "Running step2 - joing genotyping"
       echo "Running step2 - joing genotyping - removing old output dir if it exists"
@@ -379,11 +379,13 @@ workflow TopMedVariantCaller {
       perl scripts/step2-joint-genotyping.pl $(seq 1 22 | xargs -n 1 -I% echo chr%) chrX
       echo "Running step2 - joing genotyping - running Makefile"
       MAKEFILE_NAME="chrchr"$(seq -s '_chr' 1 22)_chrX".Makefile"
-      make SHELL='/bin/bash' -f "$WORKING_DIR"/paste/"$MAKEFILE_NAME" -j 22
+      make SHELL='/bin/bash' -f "$WORKING_DIR"/paste/"$MAKEFILE_NAME" -j 23
 
       #tar up the output directories into the output file provided in the input JSON
       tar -zcvf ${topmed_variant_caller_output_file} "$WORKING_DIR"/paste/ "$WORKING_DIR"/aux/individual/
 
+      #tar -zcvf /root/topmed_freeze3_calling/test_output.tar.gz "$WORKING_DIR"/paste/ "$WORKING_DIR"/aux/individual/
+      #cp /root/topmed_freeze3_calling/test_output.tar.gz ${topmed_variant_caller_output_path}
     }
      output {
       String variantDiscoveryAndConsolidationOutput = read_string(stdout())
