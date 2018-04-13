@@ -175,7 +175,7 @@ workflow TopMedVariantCaller {
       cpu: "16"
       #disks: "local-disk " + sub(disk_size, "\\..*", "") + " HDD"
       zones: "us-central1-a us-central1-b us-east1-d us-central1-c us-central1-f us-east1-c"
-      docker: "quay.io/wshands/topmed_freeze3_calling:latest"
+      docker: "quay.io/ucsc-cgl/topmed_freeze3_calling:latest"
     }
     output {
       String total_size = read_string(stdout())
@@ -395,7 +395,7 @@ workflow TopMedVariantCaller {
       cpu: "16"
       disks: "local-disk " + sub(disk_size, "\\..*", "") + " HDD"
       zones: "us-central1-a us-central1-b us-east1-d us-central1-c us-central1-f us-east1-c"
-      docker: "quay.io/wshands/topmed_freeze3_calling:latest"
+      docker: "quay.io/ucsc-cgl/topmed_freeze3_calling:latest"
     }
   }
 
