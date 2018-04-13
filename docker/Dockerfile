@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-ARG COMMIT=c49f285993a542263bcd57d095a9ef5457acffaa
+ARG COMMIT=7cf6701b4c7d3abff854e6cfd64d017db9a7464d
 
 RUN apt-get update && apt-get install -y \
     git \
