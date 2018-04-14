@@ -29,7 +29,7 @@ WORKDIR root
 
 # Clone a specific tag of the variant caller repo so we can build the tools
 # and host them inside the image
-RUN git clone https://github.com/BD2KGenomics/topmed_freeze3_calling.git --branch feature/dockerize-workflow
+RUN git clone https://github.com/BD2KGenomics/topmed_freeze3_calling.git --branch 0.1.0
 
 WORKDIR topmed_freeze3_calling
 
